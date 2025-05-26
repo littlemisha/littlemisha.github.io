@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何计算器</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            几何计算器
+        </div>
+        <div class="math-tool">
+            <div class="input-group">
+                <label for="shape-type">选择图形：</label>
+                <select id="shape-type">
+                    <option value="circle">圆形</option>
+                    <option value="rectangle">矩形</option>
+                    <option value="square">正方形</option>
+                    <option value="triangle">三角形</option>
+                    <option value="trapezoid">梯形</option>
+                    <option value="sphere">球体</option>
+                    <option value="cube">立方体</option>
+                    <option value="cylinder">圆柱体</option>
+                </select>
+            </div>
+            
+            <div id="shape-params">
+                <!-- 参数输入区域，将由JavaScript动态填充 -->
+            </div>
+            
+            <div class="input-group">
+                <button class="btn" id="calculate-btn">计算</button>
+                <button class="btn" id="clear-btn" style="margin-top: 10px; background-color: #ff6b6b;">清除</button>
+            </div>
+            
+            <div class="result" id="result">
+                <h3>计算结果</h3>
+                <p>请选择图形并输入参数</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/geometry.js"></script>
+</body>
+</html>

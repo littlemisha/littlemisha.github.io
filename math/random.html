@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机数生成器</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            随机数生成器
+        </div>
+        <div class="math-tool">
+            <div class="input-group">
+                <label for="min-value">最小值：</label>
+                <input type="number" id="min-value" value="1">
+            </div>
+            <div class="input-group">
+                <label for="max-value">最大值：</label>
+                <input type="number" id="max-value" value="100">
+            </div>
+            <div class="input-group">
+                <label for="decimal-places">小数位数：</label>
+                <input type="number" id="decimal-places" value="0" min="0" max="10">
+            </div>
+            <div class="input-group">
+                <label for="count">生成数量：</label>
+                <input type="number" id="count" value="1" min="1" max="100">
+            </div>
+            <div class="input-group">
+                <button class="btn" id="generate-btn">生成随机数</button>
+                <button class="btn" id="clear-btn" style="margin-top: 10px; background-color: #ff6b6b;">清除</button>
+            </div>
+            <div class="result" id="result">
+                <h3>生成结果</h3>
+                <p>请设置参数并点击生成按钮</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/random.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>方差计算器</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            方差计算器
+        </div>
+        <div class="math-tool">
+            <div class="input-group">
+                <label for="data-input">输入数据（用空格、逗号或换行分隔）：</label>
+                <textarea id="data-input" placeholder="例如：1 2 3 4 5&#10;或：1,2,3,4,5&#10;或每行一个数字"></textarea>
+            </div>
+            <div class="input-group">
+                <button class="btn" id="calculate-btn">计算</button>
+                <button class="btn" id="clear-btn" style="margin-top: 10px; background-color: #ff6b6b;">清除</button>
+            </div>
+            <div class="result" id="result">
+                <h3>计算结果</h3>
+                <p>请输入数据并点击计算按钮</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/variance.js"></script>
+</body>
+</html>
