@@ -63,12 +63,14 @@ function appendOperator(operator) {
         } catch (e) {
             currentInput = 'Error';
         }
+        updateDisplay();
     } else {
+        // 修复：保存当前输入到历史记录，并在显示中添加运算符
         history = currentInput + ' ' + operator;
+        lastOperation = operator;
         shouldResetScreen = true;
+        updateDisplay();
     }
-    lastOperation = operator;
-    updateDisplay();
 }
 
 // 计算结果
@@ -81,11 +83,19 @@ function calculate() {
             bracketOpen = false;
         }
         
-        // 执行计算
-        calculation = eval(currentInput);
+        // 修复：如果有历史记录和运算符，则将当前输入与历史记录组合进行计算
+        let expression = currentInput;
+        if (history && lastOperation) {
+            // 替换乘法符号 × 为 JavaScript 可识别的 *
+            expression = history.replace('×', '*') + currentInput;
+        }
+        
+        // 执行计算，替换乘法符号
+        expression = expression.replace(/×/g, '*');
+        calculation = eval(expression);
         
         // 更新历史记录
-        history = currentInput + ' =';
+        history = expression.replace(/\*/g, '×') + ' =';
         currentInput = String(calculation);
         shouldResetScreen = true;
     } catch (e) {

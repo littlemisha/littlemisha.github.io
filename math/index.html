@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学工具集</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+            padding: 20px;
+        }
+        
+        @media (max-width: 480px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tool-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: #f1f1f1;
+        }
+        
+        .tool-card h3 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+        
+        .tool-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .tool-card a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #888;
+            font-size: 0.8rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 800px;">
+        <div class="header">
+            数学工具集
+        </div>
+        <div class="math-tool">
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <a href="calculator.html">
+                        <h3>标准计算器</h3>
+                        <p>进行基本的数学运算，包括加减乘除、百分比和括号运算</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="equation-solver.html">
+                        <h3>方程求解器</h3>
+                        <p>求解一元一次方程、一元二次方程和二元一次方程组</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="geometry.html">
+                        <h3>几何计算器</h3>
+                        <p>计算各种平面和立体图形的面积、周长、体积等几何属性</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="random.html">
+                        <h3>随机数生成器</h3>
+                        <p>生成指定范围内的随机数，可设置小数位数和生成数量</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="statistics.html">
+                        <h3>统计分析工具</h3>
+                        <p>对数据集进行统计分析，计算均值、中位数、众数等统计量</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="unit-converter.html">
+                        <h3>单位转换器</h3>
+                        <p>在不同单位之间进行转换，支持长度、重量、面积等多种单位</p>
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <a href="variance.html">
+                        <h3>方差计算器</h3>
+                        <p>计算数据集的方差和标准差，评估数据的离散程度</p>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer">
+                数学工具集 &copy; 2025 - 为学习和日常计算提供便捷工具
+            </div>
+        </div>
+    </div>
+</body>
+</html>
