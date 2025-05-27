@@ -13,16 +13,34 @@
         </div>
         <div class="math-tool">
             <div class="input-group">
-                <label for="equation-type">方程类型：</label>
-                <select id="equation-type">
-                    <option value="linear">一元一次方程 (ax + b = 0)</option>
-                    <option value="quadratic">一元二次方程 (ax² + bx + c = 0)</option>
-                    <option value="system-linear">二元一次方程组 (ax + by = c, dx + ey = f)</option>
+                <label for="input-mode">输入模式：</label>
+                <select id="input-mode">
+                    <option value="direct">直接输入方程</option>
+                    <option value="params">参数输入</option>
                 </select>
             </div>
             
-            <div id="equation-params">
-                <!-- 参数输入区域，将由JavaScript动态填充 -->
+            <div id="direct-input" class="input-section">
+                <div class="input-group">
+                    <label for="equation-input">输入方程：</label>
+                    <input type="text" id="equation-input" placeholder="例如: 2x + 3 = 7 或 x^2 - 4 = 0">
+                    <small>支持一元一次方程、一元二次方程和二元一次方程组（用逗号或分号分隔）</small>
+                </div>
+            </div>
+            
+            <div id="params-input" class="input-section" style="display: none;">
+                <div class="input-group">
+                    <label for="equation-type">方程类型：</label>
+                    <select id="equation-type">
+                        <option value="linear">一元一次方程 (ax + b = 0)</option>
+                        <option value="quadratic">一元二次方程 (ax² + bx + c = 0)</option>
+                        <option value="system-linear">二元一次方程组 (ax + by = c, dx + ey = f)</option>
+                    </select>
+                </div>
+                
+                <div id="equation-params">
+                    <!-- 参数输入区域，将由JavaScript动态填充 -->
+                </div>
             </div>
             
             <div class="input-group">
@@ -32,7 +50,7 @@
             
             <div class="result" id="result">
                 <h3>求解结果</h3>
-                <p>请输入方程参数并点击求解按钮</p>
+                <p>请输入方程并点击求解按钮</p>
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px;">
