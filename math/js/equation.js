@@ -11,6 +11,344 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearBtn = document.getElementById('clear-btn');
     const resultDiv = document.getElementById('result');
     
+    // 根号表示工具函数
+    const mathUtils = {
+        // 判断一个数是否为完全平方数
+        isPerfectSquare: function(num) {
+            if (num < 0) return false;
+            const sqrt = Math.sqrt(num);
+            return Math.abs(sqrt - Math.round(sqrt)) < 1e-10;
+        },
+        
+        // 判断一个数是否可能是无理数
+        isLikelyIrrational: function(num) {
+            // 检查常见的无理数值
+            const commonIrrationals = [2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15];
+            
+            for (let n of commonIrrationals) {
+                // 检查是否接近于√n
+                const sqrtN = Math.sqrt(n);
+                if (Math.abs(num - sqrtN) < 1e-10 || Math.abs(num + sqrtN) < 1e-10) {
+                    return true;
+                }
+                
+                // 检查是否接近于√n的倍数或分数
+                for (let i = 2; i <= 10; i++) {
+                    if (Math.abs(num - sqrtN * i) < 1e-10 || 
+                        Math.abs(num + sqrtN * i) < 1e-10 ||
+                        Math.abs(num - sqrtN / i) < 1e-10 || 
+                        Math.abs(num + sqrtN / i) < 1e-10) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        },
+        
+        // 获取一个数的最大平方因子
+        getMaxSquareFactor: function(num) {
+            if (num === 0) return { factor: 0, root: 1 };
+            
+            const absNum = Math.abs(num);
+            let factor = 1;
+            let root = absNum;
+            
+            // 查找最大平方因子
+            for (let i = 2; i * i <= absNum; i++) {
+                while (root % (i * i) === 0) {
+                    factor *= i;
+                    root /= (i * i);
+                }
+            }
+            
+            return {
+                factor: factor,
+                root: root
+            };
+        },
+        
+        // 将数字表示为根号形式（如果可能）
+        formatAsRadical: function(num) {
+            // 如果是整数，直接返回
+            if (Number.isInteger(num)) {
+                return num.toString();
+            }
+            
+            // 检查是否为无理数（根号形式）
+            const radical = this.toRadical(num);
+            if (radical) {
+                return radical;
+            }
+            
+            // 尝试将数字表示为分数
+            const fraction = this.toFraction(num);
+            if (fraction) {
+                return fraction;
+            }
+            
+            // 如果无法表示为根号形式或分数，则保留4位小数
+            return num.toFixed(4);
+        },
+        
+        // 将数字表示为分数（如果是有理数）
+        toFraction: function(num, tolerance = 1.0E-10) {
+            if (Number.isInteger(num)) {
+                return num.toString();
+            }
+            
+            // 如果可能是无理数，不要转换为分数
+            if (this.isLikelyIrrational(num)) {
+                return null;
+            }
+            
+            // 简单情况处理
+            if (Math.abs(num) < tolerance) return "0";
+            
+            // 使用连分数算法找到最佳分数表示
+            let sign = num < 0 ? -1 : 1;
+            num = Math.abs(num);
+            
+            let n1 = 1, d1 = 0;
+            let n2 = 0, d2 = 1;
+            let b = num;
+            
+            do {
+                let a = Math.floor(b);
+                let aux = n1;
+                n1 = a * n1 + n2;
+                n2 = aux;
+                aux = d1;
+                d1 = a * d1 + d2;
+                d2 = aux;
+                b = 1 / (b - a);
+            } while (Math.abs(num - n1 / d1) > num * tolerance && d1 < 1000000);
+            
+            // 如果分母过大，可能是无理数的近似值，返回null
+            if (d1 > 10000) {
+                return null;
+            }
+            
+            // 如果分母为1，则返回整数
+            if (d1 === 1) {
+                return (sign * n1).toString();
+            }
+            
+            return (sign < 0 ? "-" : "") + n1 + "/" + d1;
+        },
+        
+        // 将数字表示为根号形式
+        toRadical: function(num) {
+            // 处理负数
+            if (num < 0) {
+                return "-" + this.toRadical(-num);
+            }
+            
+            // 检查是否为完全平方数
+            if (this.isPerfectSquare(num)) {
+                return Math.round(Math.sqrt(num)).toString();
+            }
+            
+            // 检查常见的无理数
+            const commonRadicals = [2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15];
+            
+            for (let radical of commonRadicals) {
+                const sqrtRadical = Math.sqrt(radical);
+                
+                // 检查是否是√radical
+                if (Math.abs(num - sqrtRadical) < 1e-10) {
+                    return "√" + radical;
+                }
+                
+                // 检查是否是√radical的整数倍
+                for (let i = 2; i <= 10; i++) {
+                    if (Math.abs(num - i * sqrtRadical) < 1e-10) {
+                        return i + "√" + radical;
+                    }
+                }
+                
+                // 检查是否是√radical的分数
+                for (let i = 2; i <= 10; i++) {
+                    if (Math.abs(num - sqrtRadical / i) < 1e-10) {
+                        return "√" + radical + "/" + i;
+                    }
+                }
+            }
+            
+            // 尝试分解为 a√b 的形式
+            const decomposed = this.getMaxSquareFactor(Math.round(num * num * 1e10) / 1e10);
+            
+            if (decomposed.factor > 1 || decomposed.root > 1) {
+                if (decomposed.factor === 1) {
+                    return "√" + decomposed.root;
+                } else {
+                    return decomposed.factor + "√" + decomposed.root;
+                }
+            }
+            
+            // 如果无法简化，则直接返回根号形式
+            // 尝试找到最接近的完全平方数
+            const nearestSquare = Math.round(Math.sqrt(num)) ** 2;
+            const diff = Math.abs(num - nearestSquare);
+            
+            if (diff < 1e-10) {
+                return Math.sqrt(nearestSquare).toString();
+            } else if (num > 1 && diff / num < 0.01) {
+                // 如果非常接近完全平方数，可能是计算误差
+                return Math.round(Math.sqrt(nearestSquare)).toString();
+            }
+            
+            // 最后尝试：检查是否是常见无理数的近似值
+            for (let i = 2; i <= 100; i++) {
+                if (!this.isPerfectSquare(i)) {
+                    const sqrtI = Math.sqrt(i);
+                    if (Math.abs(num - sqrtI) < 1e-10) {
+                        return "√" + i;
+                    }
+                }
+            }
+            
+            return null;
+        },
+        
+        // 格式化复数
+        formatComplex: function(real, imag) {
+            let realPart = this.formatAsRadical(real);
+            let imagPart = this.formatAsRadical(Math.abs(imag));
+            
+            if (imag === 0) {
+                return realPart;
+            }
+            
+            if (real === 0) {
+                if (imag === 1) return "i";
+                if (imag === -1) return "-i";
+                return imagPart + "i";
+            }
+            
+            if (imag === 1) {
+                return realPart + " + i";
+            }
+            
+            if (imag === -1) {
+                return realPart + " - i";
+            }
+            
+            return realPart + (imag < 0 ? " - " : " + ") + imagPart + "i";
+        },
+        
+        // 格式化二次方程的解
+        formatQuadraticSolution: function(a, b, delta) {
+            // 如果判别式是完全平方数，则结果是有理数
+            if (this.isPerfectSquare(delta)) {
+                const x1 = (-b + Math.sqrt(delta)) / (2 * a);
+                const x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                return {
+                    x1: this.formatAsRadical(x1),
+                    x2: this.formatAsRadical(x2),
+                    steps: [
+                        `x₁ = (-b + √Δ) / (2a) = (${-b} + √${delta}) / (2 × ${a}) = ${this.formatAsRadical(x1)}`,
+                        `x₂ = (-b - √Δ) / (2a) = (${-b} - √${delta}) / (2 × ${a}) = ${this.formatAsRadical(x2)}`
+                    ]
+                };
+            }
+            
+            // 处理无理数解
+            // 先尝试简化 -b/(2a) 部分
+            const commonTerm = -b / (2 * a);
+            const commonTermStr = this.formatAsRadical(commonTerm);
+            
+            // 简化 √delta/(2a) 部分
+            let sqrtDeltaTerm = "";
+            let x1Str = "", x2Str = "";
+            
+            // 检查是否可以简化根号部分
+            const decomposed = this.getMaxSquareFactor(delta);
+            
+            if (decomposed.factor > 1 || decomposed.root > 1) {
+                // 可以简化为 (-b ± factor√root)/(2a) 的形式
+                if (decomposed.factor === 1) {
+                    // 形如 (-b ± √root)/(2a)
+                    if (a === 1) {
+                        // 当a=1时，进一步简化
+                        x1Str = `${commonTermStr} + √${decomposed.root}/2`;
+                        x2Str = `${commonTermStr} - √${decomposed.root}/2`;
+                    } else if (a === -1) {
+                        // 当a=-1时，处理符号
+                        x1Str = `${commonTermStr} - √${decomposed.root}/2`;
+                        x2Str = `${commonTermStr} + √${decomposed.root}/2`;
+                    } else {
+                        x1Str = `${commonTermStr} + √${decomposed.root}/(2×${Math.abs(a)})`;
+                        x2Str = `${commonTermStr} - √${decomposed.root}/(2×${Math.abs(a)})`;
+                    }
+                } else {
+                    // 形如 (-b ± factor√root)/(2a)
+                    if (a === 1) {
+                        // 当a=1时，进一步简化
+                        x1Str = `${commonTermStr} + ${decomposed.factor}√${decomposed.root}/2`;
+                        x2Str = `${commonTermStr} - ${decomposed.factor}√${decomposed.root}/2`;
+                    } else if (a === -1) {
+                        // 当a=-1时，处理符号
+                        x1Str = `${commonTermStr} - ${decomposed.factor}√${decomposed.root}/2`;
+                        x2Str = `${commonTermStr} + ${decomposed.factor}√${decomposed.root}/2`;
+                    } else {
+                        x1Str = `${commonTermStr} + ${decomposed.factor}√${decomposed.root}/(2×${Math.abs(a)})`;
+                        x2Str = `${commonTermStr} - ${decomposed.factor}√${decomposed.root}/(2×${Math.abs(a)})`;
+                    }
+                }
+            } else {
+                // 无法进一步简化，使用原始形式
+                if (a === 1) {
+                    x1Str = `${commonTermStr} + √${delta}/2`;
+                    x2Str = `${commonTermStr} - √${delta}/2`;
+                } else if (a === -1) {
+                    x1Str = `${commonTermStr} - √${delta}/2`;
+                    x2Str = `${commonTermStr} + √${delta}/2`;
+                } else {
+                    x1Str = `${commonTermStr} + √${delta}/(2×${Math.abs(a)})`;
+                    x2Str = `${commonTermStr} - √${delta}/(2×${Math.abs(a)})`;
+                }
+            }
+            
+            // 构建步骤说明，确保负号显示正确
+            let stepX1 = `x₁ = (-b + √Δ) / (2a) = (${-b} + √${delta}) / (2 × ${a})`;
+            let stepX2 = `x₂ = (-b - √Δ) / (2a) = (${-b} - √${delta}) / (2 × ${a})`;
+            
+            // 处理负指数显示问题
+            stepX1 = stepX1.replace(/\+-/g, "-");
+            stepX2 = stepX2.replace(/\+-/g, "-");
+            x1Str = x1Str.replace(/\+-/g, "-");
+            x2Str = x2Str.replace(/\+-/g, "-");
+            
+            return {
+                x1: x1Str,
+                x2: x2Str,
+                steps: [
+                    `${stepX1} = ${x1Str}`,
+                    `${stepX2} = ${x2Str}`
+                ]
+            };
+        },
+        
+        // 计算最大公约数
+        gcd: function(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            if (b > a) {
+                [a, b] = [b, a];
+            }
+            while (b) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        },
+        
+        // 修复负号显示问题
+        fixNegativeDisplay: function(str) {
+            return str.replace(/\+-/g, "-").replace(/--/g, "+");
+        }
+    };
+    
     // 方程类型定义
     const equationDefinitions = {
         linear: {
@@ -38,15 +376,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 const x = -b / a;
+                const xFormatted = mathUtils.formatAsRadical(x);
                 
                 return {
                     type: 'single',
-                    solution: { x: x },
+                    solution: { x: xFormatted },
                     steps: [
                         `原方程：${a}x + ${b} = 0`,
                         `移项：${a}x = ${-b}`,
                         `两边同除以 ${a}：x = ${-b} / ${a}`,
-                        `解得：x = ${x}`
+                        `解得：x = ${xFormatted}`
                     ]
                 };
             }
@@ -80,15 +419,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     const x = -c / b;
+                    const xFormatted = mathUtils.formatAsRadical(x);
                     
                     return {
                         type: 'single',
-                        solution: { x: x },
+                        solution: { x: xFormatted },
                         steps: [
                             `原方程：${b}x + ${c} = 0 (a = 0，退化为一次方程)`,
                             `移项：${b}x = ${-c}`,
                             `两边同除以 ${b}：x = ${-c} / ${b}`,
-                            `解得：x = ${x}`
+                            `解得：x = ${xFormatted}`
                         ]
                     };
                 }
@@ -108,43 +448,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     const realPart = -b / (2 * a);
                     const imagPart = Math.sqrt(-delta) / (2 * a);
                     
+                    const realFormatted = mathUtils.formatAsRadical(realPart);
+                    const imagFormatted = mathUtils.formatAsRadical(imagPart);
+                    
+                    // 修复负号显示问题
+                    const x1Formatted = mathUtils.formatComplex(realPart, imagPart);
+                    const x2Formatted = mathUtils.formatComplex(realPart, -imagPart);
+                    
                     steps.push(`在复数范围内，方程有两个解：`);
-                    steps.push(`x₁ = ${realPart} + ${imagPart}i`);
-                    steps.push(`x₂ = ${realPart} - ${imagPart}i`);
+                    steps.push(`x₁ = ${realFormatted} + ${imagFormatted}i`);
+                    steps.push(`x₂ = ${realFormatted} - ${imagFormatted}i`);
                     
                     return {
                         type: 'complex',
                         solution: {
-                            x1: { real: realPart, imag: imagPart },
-                            x2: { real: realPart, imag: -imagPart }
+                            x1: { real: realPart, imag: imagPart, formatted: x1Formatted },
+                            x2: { real: realPart, imag: -imagPart, formatted: x2Formatted }
                         },
-                        steps: steps
+                        steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                     };
                 } else if (delta === 0) {
                     // 唯一解
                     const x = -b / (2 * a);
+                    const xFormatted = mathUtils.formatAsRadical(x);
                     
                     steps.push(`由于判别式 Δ = 0，方程有唯一解`);
-                    steps.push(`x = -b / (2a) = ${-b} / (2 × ${a}) = ${x}`);
+                    steps.push(`x = -b / (2a) = ${-b} / (2 × ${a}) = ${xFormatted}`);
                     
                     return {
                         type: 'double',
-                        solution: { x: x },
-                        steps: steps
+                        solution: { x: xFormatted },
+                        steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                     };
                 } else {
                     // 两个不同的解
-                    const x1 = (-b + Math.sqrt(delta)) / (2 * a);
-                    const x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                    const solution = mathUtils.formatQuadraticSolution(a, b, delta);
                     
                     steps.push(`由于判别式 Δ > 0，方程有两个不同的解`);
-                    steps.push(`x₁ = (-b + √Δ) / (2a) = (${-b} + √${delta}) / (2 × ${a}) = ${x1}`);
-                    steps.push(`x₂ = (-b - √Δ) / (2a) = (${-b} - √${delta}) / (2 × ${a}) = ${x2}`);
+                    steps.push(solution.steps[0]);
+                    steps.push(solution.steps[1]);
                     
                     return {
                         type: 'two',
-                        solution: { x1: x1, x2: x2 },
-                        steps: steps
+                        solution: { 
+                            x1: solution.x1, 
+                            x2: solution.x2 
+                        },
+                        steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                     };
                 }
             }
@@ -198,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         return {
                             type: 'infinite',
                             message: '方程组有无穷多解',
-                            steps: steps
+                            steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                         };
                     } else {
                         // 两个方程不成比例，无解
@@ -207,7 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         return {
                             type: 'none',
                             message: '方程组无解',
-                            steps: steps
+                            steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                         };
                     }
                 } else {
@@ -215,23 +565,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     const x = (c * e - b * f) / det;
                     const y = (a * f - c * d) / det;
                     
+                    const xFormatted = mathUtils.formatAsRadical(x);
+                    const yFormatted = mathUtils.formatAsRadical(y);
+                    
                     steps.push(`由于行列式不为0，方程组有唯一解`);
                     steps.push(`使用克莱默法则：`);
-                    steps.push(`x = (ce - bf) / det = (${c} × ${e} - ${b} × ${f}) / ${det} = ${x}`);
-                    steps.push(`y = (af - cd) / det = (${a} × ${f} - ${c} × ${d}) / ${det} = ${y}`);
+                    steps.push(`x = (ce - bf) / det = (${c} × ${e} - ${b} × ${f}) / ${det} = ${xFormatted}`);
+                    steps.push(`y = (af - cd) / det = (${a} × ${f} - ${c} × ${d}) / ${det} = ${yFormatted}`);
                     
                     // 验证解
                     const eq1 = a * x + b * y;
                     const eq2 = d * x + e * y;
                     
                     steps.push(`验证：`);
-                    steps.push(`${a} × ${x} + ${b} × ${y} = ${eq1.toFixed(10)} ≈ ${c}`);
-                    steps.push(`${d} × ${x} + ${e} × ${y} = ${eq2.toFixed(10)} ≈ ${f}`);
+                    steps.push(`${a} × ${xFormatted} + ${b} × ${yFormatted} = ${eq1.toFixed(10)} ≈ ${c}`);
+                    steps.push(`${d} × ${xFormatted} + ${e} × ${yFormatted} = ${eq2.toFixed(10)} ≈ ${f}`);
                     
                     return {
                         type: 'unique',
-                        solution: { x: x, y: y },
-                        steps: steps
+                        solution: { x: xFormatted, y: yFormatted },
+                        steps: steps.map(step => mathUtils.fixNegativeDisplay(step))
                     };
                 }
             }
@@ -732,15 +1085,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>x₂ = ${result.solution.x2}</p>
                 `;
             } else if (result.type === 'complex') {
-                const x1Real = result.solution.x1.real;
-                const x1Imag = result.solution.x1.imag;
-                const x2Real = result.solution.x2.real;
-                const x2Imag = result.solution.x2.imag;
-                
                 html += `
                     <p><strong>复数解：</strong></p>
-                    <p>x₁ = ${x1Real} + ${x1Imag}i</p>
-                    <p>x₂ = ${x2Real} ${x2Imag < 0 ? '' : '+'} ${x2Imag}i</p>
+                    <p>x₁ = ${result.solution.x1.formatted}</p>
+                    <p>x₂ = ${result.solution.x2.formatted}</p>
                 `;
             } else if (result.type === 'unique') {
                 html += `
