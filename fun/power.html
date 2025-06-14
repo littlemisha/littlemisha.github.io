@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备开机状态检测器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .status-card {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: all 0.5s ease;
+        }
+        
+        .status-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            transition: all 0.5s ease;
+        }
+        
+        .offline .status-icon {
+            color: #e74c3c;
+        }
+        
+        .offline .status-text {
+            color: #e74c3c;
+        }
+        
+        .online .status-icon {
+            color: #27ae60;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .online .status-text {
+            color: #27ae60;
+        }
+        
+        .detect-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .detect-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .detect-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .detect-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #2980b9, #3498db);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .detect-btn:hover::after {
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #ecf0f1;
+            border-radius: 3px;
+            margin: 25px 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            transition: width 0.3s ease;
+        }
+        
+        .info-panel {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .info-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-panel h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .info-panel ul {
+            list-style-type: none;
+        }
+        
+        .info-panel li {
+            padding: 8px 0;
+            color: #34495e;
+            display: flex;
+        }
+        
+        .info-panel li i {
+            color: #27ae60;
+            margin-right: 10px;
+            min-width: 20px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .status-text {
+                font-size: 1.4rem;
+            }
+            
+            .status-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header fade-in">
+            <h1>设备开机状态检测器</h1>
+            <p>本系统提供对目标设备的开机状态检测功能，通过标准化的检测流程确认设备运行状态</p>
+        </div>
+        
+        <div class="status-card offline fade-in delay-1">
+            <i class="fas fa-power-off status-icon"></i>
+            <div class="status-text">设备状态：待检测</div>
+        </div>
+        
+        <div class="progress-bar fade-in delay-2">
+            <div class="progress"></div>
+        </div>
+        
+        <button id="detectBtn" class="detect-btn fade-in delay-3">
+            <i class="fas fa-play-circle"></i> 开始检测
+        </button>
+        
+        <div class="info-panel fade-in delay-1">
+            <h3><i class="fas fa-info-circle"></i> 检测说明</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> 检测过程将执行设备状态查询的标准流程</li>
+                <li><i class="fas fa-check"></i> 检测结果将显示设备的实时开机状态</li>
+                <li><i class="fas fa-check"></i> 检测过程将在数秒内完成</li>
+                <li><i class="fas fa-check"></i> 本系统仅提供状态检测功能，不涉及设备控制操作</li>
+            </ul>
+        </div>
+        
+        <footer class="fade-in delay-2">
+            <p>设备状态检测系统</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const detectBtn = document.getElementById('detectBtn');
+            const statusCard = document.querySelector('.status-card');
+            const statusIcon = document.querySelector('.status-icon');
+            const statusText = document.querySelector('.status-text');
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.querySelector('.progress');
+            
+            detectBtn.addEventListener('click', function() {
+                // 禁用按钮防止重复点击
+                detectBtn.disabled = true;
+                detectBtn.innerHTML = '<i class="fas fa-cog fa-spin"></i> 检测中...';
+                
+                // 显示进度条
+                progressBar.style.display = 'block';
+                
+                // 重置状态
+                statusCard.classList.remove('online', 'offline');
+                statusCard.classList.add('offline');
+                statusIcon.className = 'fas fa-cog fa-spin status-icon';
+                statusText.textContent = '检测中...';
+                
+                // 模拟进度条
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        
+                        // 更新状态为在线
+                        statusCard.classList.remove('offline');
+                        statusCard.classList.add('online');
+                        statusIcon.className = 'fas fa-power-off status-icon';
+                        statusText.textContent = '设备处于开机状态';
+                        
+                        // 重置按钮
+                        detectBtn.disabled = false;
+                        detectBtn.innerHTML = '<i class="fas fa-redo"></i> 重新检测';
+                        
+                        // 3秒后隐藏进度条
+                        setTimeout(() => {
+                            progressBar.style.display = 'none';
+                            progress.style.width = '0%';
+                        }, 3000);
+                    } else {
+                        width += 5;
+                        progress.style.width = width + '%';
+                    }
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
