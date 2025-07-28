@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长链接跳转中...</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(52, 152, 219, 0.2);
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            margin: 30px auto;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdeded;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            text-align: left;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+    </style>
+    <script>
+        // 从URL参数中获取Base64编码的数据
+        const urlParams = new URLSearchParams(window.location.search);
+        const base64 = urlParams.get('data');
+        
+        // 如果存在数据参数
+        if (base64) {
+            try {
+                // 还原Base64字符串（处理URL安全字符）
+                let base64Data = base64
+                    .replace(/-/g, '+')
+                    .replace(/_/g, '/');
+                
+                // 补全Base64填充
+                const pad = base64Data.length % 4;
+                if (pad) {
+                    if (pad === 1) {
+                        throw new Error('无效的Base64长度');
+                    }
+                    base64Data += new Array(5-pad).join('=');
+                }
+                
+                // 解码URL
+                const decodedUrl = decodeURIComponent(atob(base64Data));
+                
+                // 重定向到原始URL
+                setTimeout(() => {
+                    window.location.href = decodedUrl;
+                }, 2000);
+            } catch (error) {
+                // 错误处理
+                document.body.innerHTML = `
+                    <div class="container">
+                        <h1><i class="fas fa-exclamation-triangle"></i> 跳转失败</h1>
+                        <div class="error">
+                            <p><strong>错误信息:</strong> ${error.message || '无效的长链接格式'}</p>
+                            <p><strong>参数值:</strong> ${base64}</p>
+                        </div>
+                        <p>请检查链接是否正确，或联系链接提供者</p>
+                        <a href="index.html" class="btn">返回生成器</a>
+                    </div>
+                `;
+            }
+        } else {
+            // 没有提供数据参数
+            document.body.innerHTML = `
+                <div class="container">
+                    <h1><i class="fas fa-link"></i> 缺少参数</h1>
+                    <p>长链接格式应为: redirect.html?data=Base64编码数据</p>
+                    <p>请确保提供了有效的长链接参数</p>
+                    <a href="index.html" class="btn">返回生成器</a>
+                </div>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-link"></i> 正在跳转</h1>
+        <p>请稍候，正在处理您的长链接请求...</p>
+        <div class="spinner"></div>
+        <p>如果长时间没有跳转，请检查链接是否正确</p>
+    </div>
+    
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
