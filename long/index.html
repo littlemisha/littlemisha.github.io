@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简洁长链接生成器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            max-width: 700px;
+        }
+        
+        .info-section {
+            flex: 1;
+            max-width: 450px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #3498db;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+        
+        .card-title i {
+            font-size: 1.6rem;
+            color: #3498db;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+            box-shadow: 0 7px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            background: #f8fafd;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px dashed #3498db;
+            display: none;
+        }
+        
+        .result-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .long-link {
+            word-break: break-all;
+            padding: 18px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            border: 1px solid #e0e6ed;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .info-box {
+            background: #f8fafd;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        .info-box h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+        }
+        
+        .info-box ul {
+            padding-left: 24px;
+        }
+        
+        .info-box li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .example {
+            background: #e8f4fc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            padding: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .main-content, .info-section {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-link"></i> 简洁长链接生成器</h1>
+        <p class="subtitle">将普通URL转换为安全的长链接，通过Base64编码实现高效跳转</p>
+    </div>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-plus-circle"></i>
+                    <h2>生成长链接</h2>
+                </div>
+                
+                <div class="input-group">
+                    <label for="original-url"><i class="fas fa-globe"></i> 输入原始URL</label>
+                    <input type="url" id="original-url" placeholder="https://example.com" required>
+                </div>
+                
+                <button class="btn" id="generate-btn">
+                    <i class="fas fa-magic"></i> 生成长链接
+                </button>
+                
+                <div class="result-container" id="result-container">
+                    <div class="input-group">
+                        <label for="long-link"><i class="fas fa-link"></i> 生成的长链接</label>
+                        <div class="long-link" id="long-link-display"></div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-success" id="copy-btn">
+                            <i class="fas fa-copy"></i> 复制长链接
+                        </button>
+                        <button class="btn" id="new-btn">
+                            <i class="fas fa-redo"></i> 生成新链接
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-info-circle"></i>
+                    <h2>使用说明</h2>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>输入原始URL</h3>
+                        <p>在输入框中输入您想要转换的原始URL地址</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>生成长链接</h3>
+                        <p>点击生成按钮创建基于Base64编码的长链接</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>使用长链接</h3>
+                        <p>复制生成的长链接并分享给其他人使用</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-cogs"></i>
+                    <h2>技术原理</h2>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-lock"></i> 安全编码</h3>
+                    <p>使用Base64编码技术对原始URL进行转换：</p>
+                    <ul>
+                        <li>对原始URL进行URI编码</li>
+                        <li>转换为Base64格式</li>
+                        <li>替换特殊字符为URL安全字符（+ → -, / → _）</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-exchange-alt"></i> 跳转过程</h3>
+                    <p>当用户访问长链接时：</p>
+                    <ul>
+                        <li>提取URL中的Base64数据</li>
+                        <li>还原URL安全字符</li>
+                        <li>解码Base64并获取原始URL</li>
+                        <li>重定向到目标地址</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-shield-alt"></i> 注意事项</h3>
+                    <ul>
+                        <li>长链接使用当前目录下的redirect.html</li>
+                        <li>Base64编码不是加密，仅用于格式转换</li>
+                        <li>URL长度会增加，请确保目标系统支持长URL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2023 简洁长链接生成器 | 纯前端实现，无需服务器支持</p>
+        <p>长链接格式：当前路径/redirect.html?data=Base64编码数据</p>
+    </div>
+
+    <script>
+        // 生成长链接功能
+        document.getElementById('generate-btn').addEventListener('click', () => {
+            const originalUrl = document.getElementById('original-url').value.trim();
+            
+            if (!originalUrl) {
+                alert('请输入有效的URL');
+                return;
+            }
+            
+            // 转换为安全的Base64编码（URL安全）
+            const base64 = btoa(encodeURIComponent(originalUrl))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+            
+            // 生成长链接（使用当前路径下的redirect.html）
+            const currentPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            const longLink = `${window.location.origin}${currentPath}redirect.html?data=${base64}`;
+            
+            // 显示结果
+            document.getElementById('long-link-display').textContent = longLink;
+            document.getElementById('result-container').classList.add('active');
+            
+            // 滚动到结果区域
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        
+        // 复制长链接功能
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const longLink = document.getElementById('long-link-display').textContent;
+            navigator.clipboard.writeText(longLink)
+                .then(() => {
+                    const btn = document.getElementById('copy-btn');
+                    const originalHtml = btn.innerHTML;
+                    
+                    btn.innerHTML = '<i class="fas fa-check"></i> 已复制!';
+                    btn.style.background = '#2ecc71';
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.style.background = '';
+                    }, 2000);
+                })
+                .catch(err => console.error('复制失败:', err));
+        });
+        
+        // 生成新链接功能
+        document.getElementById('new-btn').addEventListener('click', () => {
+            document.getElementById('original-url').value = '';
+            document.getElementById('result-container').classList.remove('active');
+            document.getElementById('original-url').focus();
+        });
+    </script>
+</body>
+</html>
