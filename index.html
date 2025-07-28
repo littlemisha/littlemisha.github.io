@@ -1,11 +1,73 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <title>主页</title> 
-</head> 
-<body> 
-    <a href="WordToNumber.html">字母转数字</a><br>
-    <a href="Vibrator.html">震动器</a><br>
-    <a href="fun/power.html">设备开机状态检测器</a> 
-</body> 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .tool-links {
+            list-style: none;
+            padding: 0;
+        }
+        .tool-links li {
+            margin-bottom: 12px;
+        }
+        .tool-links a {
+            display: block;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .tool-links a:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>主页</h1>
+        <ul class="tool-links">
+            <li><a href="WordToNumber.html">字母转数字工具</a></li>
+            <li><a href="Vibrator.html">设备震动器</a></li>
+            <li><a href="fun/power.html">设备开机状态检测器</a></li>
+            <li><a href="long">长链接功能</a></li>
+        </ul>
+    </div>
+</body>
 </html>
