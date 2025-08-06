@@ -1,0 +1,37 @@
+<!-- 引入 Prism.js 代码高亮 -->
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+<!-- 引入笔记专用样式 -->
+<link rel="stylesheet" href="{{ '/note/assets/css/notes.css' | relative_url }}">
+
+<!-- 复制按钮增强脚本 -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 添加复制成功反馈
+  document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const originalText = this.textContent;
+      this.textContent = '✓ 已复制';
+      
+      setTimeout(() => {
+        this.textContent = originalText;
+      }, 2000);
+    });
+  });
+  
+  // 自动添加语言标签
+  document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+    const langClass = [...pre.classList].find(c => c.startsWith('language-'));
+    if (langClass) {
+      const lang = langClass.replace('language-', '');
+      const label = document.createElement('div');
+      label.className = 'code-language';
+      label.textContent = lang;
+      pre.prepend(label);
+    }
+  });
+});
+</script>
