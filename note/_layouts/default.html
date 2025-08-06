@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }}</title>
+  <!-- 包含头部模板 -->
+  {% include head.html %}
+</head>
+<body>
+  <div class="container">
+    <!-- 导航 -->
+    <nav class="nav-links">
+      <a href="/note/">首页</a>
+      <a href="/note/termux">Termux 基础命令</a>
+      <a href="/note/git">Git 常用命令</a>
+    </nav>
+    
+    <!-- 内容 -->
+    <article>
+      <h1>{{ page.title }}</h1>
+      {{ content }}
+    </article>
+  </div>
+</body>
+</html>

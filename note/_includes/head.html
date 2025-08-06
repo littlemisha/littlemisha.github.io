@@ -1,51 +1,51 @@
-<!-- 引入 Prism.js 核心 -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 加载 Prism.js 核心 -->
 <link rel="stylesheet" 
       href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 
-<!-- 引入复制插件 -->
+<!-- 加载复制插件 -->
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
 
-<!-- 引入笔记专用样式 -->
-<link rel="stylesheet" href="{{ '/note/assets/css/notes.css' | relative_url }}?v=1">
+<!-- 加载语言支持 -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
 
-<!-- 修复脚本 -->
+<!-- 加载笔记专用样式 (修正路径) -->
+<link rel="stylesheet" href="/note/assets/css/notes.css">
+
 <script>
-// 确保在页面完全加载后执行
-window.addEventListener('load', function() {
-  // 1. 重新初始化 Prism（确保处理动态内容）
-  Prism.highlightAll();
-  
-  // 2. 添加复制成功反馈
-  document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const originalText = this.textContent;
-      this.textContent = '✓ 已复制';
-      
-      setTimeout(() => {
-        this.textContent = originalText;
-      }, 2000);
+// 确保复制按钮正确初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 手动初始化 Prism
+  if (window.Prism) {
+    Prism.highlightAll();
+    
+    // 添加复制成功反馈
+    document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const originalText = this.textContent;
+        this.textContent = '✓ 已复制';
+        
+        setTimeout(() => {
+          this.textContent = originalText;
+        }, 2000);
+      });
     });
-  });
-  
-  // 3. 确保复制按钮可见
-  document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
-    btn.style.display = 'block';
-    btn.style.opacity = '1';
-  });
-  
-  // 4. 添加语言标签
-  document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
-    const langClass = [...pre.classList].find(c => c.startsWith('language-'));
-    if (langClass) {
-      const lang = langClass.replace('language-', '');
-      const label = document.createElement('div');
-      label.className = 'code-language';
-      label.textContent = lang;
-      pre.prepend(label);
-    }
-  });
-  
-  console.log('Prism.js 复制插件已激活');
+    
+    // 添加语言标签
+    document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+      const langClass = [...pre.classList].find(c => c.startsWith('language-'));
+      if (langClass && !pre.querySelector('.code-language')) {
+        const lang = langClass.replace('language-', '');
+        const label = document.createElement('div');
+        label.className = 'code-language';
+        label.textContent = lang;
+        pre.prepend(label);
+      }
+    });
+  }
 });
 </script>
