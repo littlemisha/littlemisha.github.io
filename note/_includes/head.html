@@ -1,16 +1,22 @@
-<!-- 引入 Prism.js 代码高亮 -->
+<!-- 引入 Prism.js 核心 -->
 <link rel="stylesheet" 
       href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+
+<!-- 引入复制插件 -->
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
 
 <!-- 引入笔记专用样式 -->
-<link rel="stylesheet" href="{{ '/note/assets/css/notes.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/note/assets/css/notes.css' | relative_url }}?v=1">
 
-<!-- 复制按钮增强脚本 -->
+<!-- 修复脚本 -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 添加复制成功反馈
+// 确保在页面完全加载后执行
+window.addEventListener('load', function() {
+  // 1. 重新初始化 Prism（确保处理动态内容）
+  Prism.highlightAll();
+  
+  // 2. 添加复制成功反馈
   document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
     btn.addEventListener('click', function() {
       const originalText = this.textContent;
@@ -22,7 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // 自动添加语言标签
+  // 3. 确保复制按钮可见
+  document.querySelectorAll('.copy-to-clipboard-button').forEach(btn => {
+    btn.style.display = 'block';
+    btn.style.opacity = '1';
+  });
+  
+  // 4. 添加语言标签
   document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
     const langClass = [...pre.classList].find(c => c.startsWith('language-'));
     if (langClass) {
@@ -33,5 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pre.prepend(label);
     }
   });
+  
+  console.log('Prism.js 复制插件已激活');
 });
 </script>
