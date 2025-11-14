@@ -4,7 +4,7 @@
 
 ---
 
-<<< @/Hello.java
+<<< Hello.java
 
 **编译**
 
