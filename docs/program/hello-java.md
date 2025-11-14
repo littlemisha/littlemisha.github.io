@@ -4,7 +4,7 @@
 
 ---
 
-<<< @/Hello.js
+<<< @/Hello.java
 
 **编译**
 
