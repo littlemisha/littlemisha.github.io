@@ -3,7 +3,7 @@ export default {
   title: '小米夏的笔记',
   description: '学习Java时做的笔记',
   cleanUrls: 'true',  //去除 .html 后缀
-  lastUpdated: 'true'  //显示页面最后更新时间
+  lastUpdated: 'true',  //显示页面最后更新时间
   head: [
     // 1. 传统 favicon
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
