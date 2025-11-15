@@ -26,8 +26,6 @@ java Hello
 你好呀，Java酱
 ```
 
----
-
 ## 打印输出
 ### System.out.println
 打印并换行
