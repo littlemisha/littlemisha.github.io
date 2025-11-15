@@ -69,7 +69,7 @@ public class Print{
 可爱小Java少了缩进不报错永远爱Java
 ```
 
-## IO.println
+### IO.println
 在Java25中，也可以使用如下方式打印文本
 
 ```java
