@@ -68,3 +68,12 @@ public class Print{
 ```
 可爱小Java少了缩进不报错永远爱Java
 ```
+
+## IO.println
+在Java25中，也可以使用如下方式打印文本
+
+```java
+void main(){
+	IO.println("你好呀，Java酱");
+}
+```
