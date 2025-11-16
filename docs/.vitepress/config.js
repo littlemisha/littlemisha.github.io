@@ -23,8 +23,8 @@ export default {
       {
         text: 'Java',
         items: [
-          { text: 'Hello Java', link: '/hello-java' },
-          { text: '转义文本', link: '/escape-character' },
+          { text: 'Hello Java', link: '/program/hello-java' },
+          { text: '转义文本', link: '/program/escape-character' },
         ]
       }
     ]
