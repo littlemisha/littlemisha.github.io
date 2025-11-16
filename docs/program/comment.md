@@ -7,7 +7,7 @@
 // 第一行注释
 void main(){
   // 第二行注释
-IO.println("你好呀，Java酱");
+  IO.println("你好呀，Java酱");
 }  // 第三行注释
 ```
 
