@@ -17,5 +17,16 @@ export default {
     ['link', { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/android-chrome-192x192.png' }],
     // 6. 512x512 PNG 图标
     ['link', { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/favicon-512x512.png' }]
-  ]
+  ],
+  themeConfig: {
+    sidebar: [
+      {
+        text: 'Java',
+        items: [
+          { text: 'Hello Java', link: '/hello-java' },
+          { text: '转义文本', link: '/escape-character' },
+        ]
+      }
+    ]
+  }
 }
