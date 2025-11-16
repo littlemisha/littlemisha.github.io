@@ -4,7 +4,13 @@
 
 ---
 
-<<< Hello.java
+```java
+public class Hello {
+  public static void main(String[] args) {
+    System.out.println("你好呀，Java酱");
+  }
+}
+```
 
 **编译**
 
@@ -32,11 +38,11 @@ java Hello
 
 ```java
 public class Println{
-	public static void main(String[] args){
-		System.out.println("可爱小Java");
-		System.out.println("少了缩进不报错");
-		System.out.println("永远爱Java");
-	}
+  public static void main(String[] args){
+    System.out.println("可爱小Java");
+    System.out.println("少了缩进不报错");
+    System.out.println("永远爱Java");
+  }
 }
 ```
 
@@ -53,11 +59,11 @@ public class Println{
 
 ```java
 public class Print{
-	public static void main(String[] args){
-		System.out.print("可爱小Java");
-		System.out.print("少了缩进不报错");
-		System.out.print("永远爱Java");
-	}
+  public static void main(String[] args){
+    System.out.print("可爱小Java");
+    System.out.print("少了缩进不报错");
+    System.out.print("永远爱Java");
+  }
 }
 ```
 
@@ -72,6 +78,6 @@ public class Print{
 
 ```java
 void main(){
-	IO.println("你好呀，Java酱");
+  IO.println("你好呀，Java酱");
 }
 ```
