@@ -23,8 +23,9 @@ export default {
       {
         text: 'Java',
         items: [
-          { text: 'Hello Java', link: '/program/hello-java' },
-          { text: '转义文本', link: '/program/escape-character' },
+          { text: 'Hello Java', link: '/java/hello-java' },
+          { text: '转义文本', link: '/java/escape-character' },
+          { text: '注释', link: '/java/comment' },
         ]
       }
     ]
