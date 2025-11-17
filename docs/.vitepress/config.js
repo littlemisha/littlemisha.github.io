@@ -24,8 +24,10 @@ export default {
         text: 'Java',
         items: [
           { text: 'Hello Java', link: '/java/hello-java' },
-          { text: '转义文本', link: '/java/escape-character' },
+          { text: '转义字符', link: '/java/escape-character' },
           { text: '注释', link: '/java/comment' },
+          { text: '数据类型', link: '/java/data-type' },
+          { text: '变量与常量', link: '/java/variable' },
         ]
       }
     ]
