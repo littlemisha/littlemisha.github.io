@@ -12,6 +12,12 @@ public class Age {
 }
 ```
 
+**输出**
+
+```
+小明今年15岁
+```
+
 ## 常量
 
 ```java
@@ -21,4 +27,10 @@ public class Pi {
     System.out.println("π约等于"+PI);
   }
 }
+```
+
+**输出**
+
+```
+π约等于3.14
 ```
