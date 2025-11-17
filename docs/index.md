@@ -8,7 +8,7 @@ hero:
     # 按钮的颜色主题
     - theme: brand
       text: 偷看笔记
-      link: /program/hello-java
+      link: /java/hello-java
     - theme: alt
       text: GitHub
       link: https://github.com/littlemisha/littlemisha.github.io
