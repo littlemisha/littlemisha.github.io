@@ -1,11 +1,6 @@
 # Hello Java
 
-<picture>
-  <source srcset="assets/java.jxl" type="image/jxl">
-  <source srcset="assets/java.webp" type="image/webp">
-  <img src="assets/java.png" alt="Java" loading="可爱小Java">
-</picture>
-
+![可爱小Java](assets/java.webp)
 
 ---
 
