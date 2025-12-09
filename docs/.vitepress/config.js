@@ -28,7 +28,7 @@ export default {
           { text: '注释', link: '/java/comment' },
           { text: '数据类型', link: '/java/data-type' },
           { text: '变量与常量', link: '/java/variable' },
-          { text: '运算符, link: '/java/operator' },
+          { text: '运算符', link: '/java/operator' },
         ]
       }
     ]
