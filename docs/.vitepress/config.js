@@ -18,12 +18,6 @@ export default {
     // 6. 512x512 PNG 图标
     ['link', { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/favicon-512x512.png' }]
   ],
-  
-  // 添加 Vite 配置来处理 JXL 格式
-  vite: {
-    assetsInclude: ['**/*.jxl']
-  },
-  
   themeConfig: {
     sidebar: [
       {
