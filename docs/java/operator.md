@@ -15,22 +15,23 @@
 
 ### 示例
 ```java
-public class operator {
+public class Operator {
   public static void main(String[] args) {
     int a = 1;
     int b = 2;
     int c = 5;
     int d = 7;
-    System.out.println("a + b = " + (a + b) );
-    System.out.println("a - b = " + (a - b) );
-    System.out.println("a * b = " + (a * b) );
-    System.out.println("c / b = " + (c / b) );
-    System.out.println("c % b = " + (c % b) );
-    System.out.println("c % c = " + (c % c) );
-    System.out.println("a++ = " +  (a++) );
-    System.out.println("a-- = " +  (a--) );
-    System.out.println("d++ = " +  (d++) );
-    System.out.println("++d = " +  (++d) );
+
+    System.out.println("a + b = " + (a + b));
+    System.out.println("a - b = " + (a - b));
+    System.out.println("a * b = " + (a * b));
+    System.out.println("c / b = " + (c / b));
+    System.out.println("c % b = " + (c % b));
+    System.out.println("c % c = " + (c % c));
+    System.out.println("a++ = " + (a++));
+    System.out.println("a-- = " + (a--));
+    System.out.println("d++ = " + (d++));
+    System.out.println("++d = " + (++d));
   }
 }
 ```
