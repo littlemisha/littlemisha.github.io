@@ -6,8 +6,8 @@
 ```java
 public class Age {
   public static void main(String[] args) {
-    short age=15;
-    System.out.println("小明今年"+age+"岁");
+    short age = 15;
+    System.out.println("小明今年" + age + "岁");
   }
 }
 ```
@@ -23,8 +23,8 @@ public class Age {
 ```java
 public class Pi {
   public static void main(String[] args) {
-    final double PI=3.14;
-    System.out.println("π约等于"+PI);
+    final double PI = 3.14;
+    System.out.println("π约等于" + PI);
   }
 }
 ```
