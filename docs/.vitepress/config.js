@@ -31,6 +31,8 @@ export default {
           { text: '运算符', link: '/java/operator' },
           { text: '类型转换', link: '/java/type-conversion' },
           { text: 'Scanner', link: '/java/scanner' },
+          { text: '运算符', link: '/java/operator' },
+          { text: '条件语句', link: '/java/if-else-switch' },
         ]
       }
     ]
